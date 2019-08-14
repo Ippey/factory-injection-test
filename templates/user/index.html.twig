@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+        <a class="navbar-brand" href="#">Qiita's Profile</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+            <form class="form-inline mt-2 mt-md-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="ユーザIDで検索" aria-label="Search" id="user_id">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+    <main class="container" role="main">
+        <div class="alert alert-danger" role="alert" id="error" style="display: none;">
+            ユーザ名を入力してください。
+        </div>
+        {% if user %}
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="{{ user.profile_image_url }}" alt="{{ user.name }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ user.name }}<br><p class="h6 text-muted">@{{ user.id }}</p></h5>
+                <p class="card-text">
+                    <span class="badge badge-secondary">フォロー中 <span class="badge badge-light">{{ user.followees_count }}</span></span>
+                    <span class="badge badge-secondary">フォロワー <span class="badge badge-light">{{ user.followers_count }}</span></span>
+                </p>
+                <a href="https://qiita.com/{{ user.id|escape }}" class="btn btn-success" target="_blank" rel="noopener">Qiitaプロフィールページ</a>
+            </div>
+        </div>
+        {% else %}
+            <div class="alert alert-danger" role="alert">
+                ユーザが見つかりませんでした。
+            </div>
+        {% endif %}
+    </main>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+<script>
+    $(document).ready(function() {
+        let error = $('#error');
+        let userId = $('#user_id');
+        $('#submit').on('click', function() {
+            if (userId.val() !== '') {
+                location.href = '/user/' + userId.val();
+            } else {
+                error.show();
+            }
+            return false;
+        });
+    });
+</script>
+{% endblock %}
